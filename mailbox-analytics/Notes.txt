@@ -1,0 +1,192 @@
+Relationship Analytics 
+***
+
+Features 
+
+* shows out heatmap or relationship 
+* shows emails out on whos your closest contact, etc 
+* instantiate conversation 
+
+Sources of info
+
+* calendar appointments
+* phone numbers (voice calls) 
+* mail (content size, # of receipients) 
+
+***
+
+Data source
+
+https://www.google.com/settings/u/1/takeout/downloads
+* Mail 
+
+http://www.thegeekstuff.com/2009/08/10-awesome-examples-for-viewing-huge-log-files-in-unix/
+* viewing huge files
+
+http://pymotw.com/2/mailbox/
+* reading mbox files with python 
+
+***
+
+ 
+
+Relationships Analysis 
+
+Mail (Gmail) 
+http://www.google.com/enterprise/apps/business/products.html
+https://answers.yahoo.com/question/index?qid=20070919202435AA8Bh3X
+http://gmailblog.blogspot.com/2013/12/download-copy-of-your-gmail-and-google.html
+* through Google Vault (Corporate) -- eDiscovery (analytics/retrieval tool)
+* export through MBOX 
+* can export as POP
+
+Phone 
+
+Run application to see number of interactions, strong links, etc
+
+
+Redefined
+* create a personality scope (fb interactions, mail, phone)
+
+
+***
+
+Gmail APIS
+https://developers.google.com/gmail/
+- ACITONS for inbox (e.g. rating) 
+- IMAP/SMTP 
+- Add gadgets to GMAIL 
+
+- facebook integration (login) 
+- gmail integration (login) 
+
+***
+
+Pandas
+
+http://pandas.pydata.org/pandas-docs/stable/10min.html#stats
+
+
+Comparison to R
+http://pandas.pydata.org/pandas-docs/stable/comparison_with_r.html
+http://blog.yhathq.com/posts/R-and-pandas-and-what-ive-learned-about-each.html
+
+
+*** 
+
+- how to run from pycharm 
+# how to return and break
+# print (buffering)
+
+***
+
+
+
+Populating Data
+
+* http://stackoverflow.com/questions/18771963/pandas-efficient-dataframe-set-row
+
+***
+
+start up idea
+
+Facebook digest. email digest. summary reports
+
+***
+
+# kse and other start up meetup signup (undercover for now) 
+
+***
+
+Pandas 
+
+http://stackoverflow.com/questions/17134716/convert-dataframe-column-type-from-string-to-datetime
+* converting column string to time 
+
+***
+
+Good overivews
+http://nbviewer.ipython.org/github/changhiskhan/talks/blob/master/pydata2012/pandas_timeseries.ipynb
+http://earthpy.org/pandas-basics.html
+http://earthpy.org/time_series_analysis_with_pandas_part_2.html
+
+Time series
+http://pandas.pydata.org/pandas-docs/stable/timeseries.html
+
+
+Group by with time series (month and year) 
+http://stackoverflow.com/questions/17450313/summing-over-months-with-pandas
+
+Adding column to existing data frame 
+* http://stackoverflow.com/questions/12555323/adding-new-column-to-existing-dataframe-in-python-pandas
+
+***
+
+def exportCSV():
+    mbox = mailbox.mbox('d:/tmp/gmail.mbox')
+    with open('test.csv', 'w', newline='\n') as csv_file:
+        writer = csv.writer(csv_file, delimiter=',' ,quotechar="'", quoting=csv.QUOTE_ALL)
+        c = 0
+        for m in mbox:
+            #print(m['from'] + ", " + m['to'] + ", " + m['subject'])
+            line = [m['Date'], m['from'], m['subject']]
+            writer.writerow(line)
+            c=c+1
+            if(c > 200):
+                #csv_file.close()
+                #return
+                break
+            print('.', end='',flush=True)
+
+# READING
+# with open('test.csv', 'r', newline='\n') as csvfile:
+#     spamreader = csv.reader(csvfile, delimiter=',', quotechar="'", quoting=csv.QUOTE_ALL)
+#     for row in spamreader:
+#         print(', '.join(row))
+
+#exportCSV()
+
+***
+
+http://pandas.pydata.org/pandas-docs/stable/missing_data.html
+* dropping dropna data
+
+***
+
+>>> df.pivot_table(df, values='count', index='From')
+>>> df.pivot_table(df, values='count', index='From', aggfunc=np.sum())
+>>> df.pivot_table(df, values='count', index='From', aggfunc=np.sum)
+>>> df.pivot_table(df, value='count', index='From', aggfunc=np.sum)
+>>> df.pivot_table(df, values=['count'], index='From', aggfunc=np.sum)
+>>> df.pivot_table(df, values='count', index=['From'], aggfunc=np.sum)
+>>> df.pivot_table(df, values='count', index=['From'], columsn=['count'] aggfunc=np.sum)
+>>> df.pivot_table(df, values='count', index=['From'], columsn=['count'], aggfunc=np.sum)
+>>> df.pivot_table(values='count', index=['From'], columsn=['count'], aggfunc=np.sum)
+>>> df.pivot_table(df, values='count', index=['From'], columns=['count'], aggfunc=np.sum)
+>>> pd.pivot_table(df, values='count', index='From')
+>>> pd.pivot_table(df, values='count', index='From', aggfunc=np.sum)
+>>> pd.pivot_table(df, values='count', index='Date', columns=['From'], aggfunc=np.sum)
+>>> pd.pivot_table(df, values='count', index='From', aggfunc=np.sum)
+>>> t = pd.pivot_table(df, values='count', index='From', aggfunc=np.sum)
+>>> t
+>>> t.count()
+>>> t.count
+>>> t.count > 5
+>>> t[t.count > 5]
+>>> t = pd.pivot_table(df, values='count', index='From', aggfunc=np.sum)
+>>> t.columns
+>>> t.column
+>>> t
+>>> df.pivot_table(df, values='count', index=['From'], columns=['count'], aggfunc=np.sum)
+>>> pd.pivot_table(df, values='count', index='Date', columns=['From'], aggfunc=np.sum)
+>>> t = pd.pivot_table(df, values='count', index='Date', columns=['From'], aggfunc=np.sum)
+>>> t
+>>> t.columns
+>>> t.columns = ['Chung, Eugene" <eugene.chung@mezocliq.com>']
+>>> t2 = pd.DataFrame(t, columns=['"Chung, Eugene" <eugene.chung@mezocliq.com>'])
+>>> t2
+>>> t
+>>> t2
+
+
+***

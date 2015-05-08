@@ -1,0 +1,46 @@
+Excel report
+
+http://superuser.com/questions/533518/in-excel-2013-where-are-visual-basic-vba-macros-addin-tools
+* add VB in excel 
+
+http://stackoverflow.com/questions/6312710/how-to-get-images-to-appear-in-excel-given-image-url
+* code to show image with link in VB 
+
+Dim url_column As Range
+Dim image_column As Range
+
+Set url_column = Worksheets(1).UsedRange.Columns("A")
+Set image_column = Worksheets(1).UsedRange.Columns("B")
+
+Dim i As Long
+For i = 1 To url_column.Cells.Count
+
+  With image_column.Worksheet.Pictures.Insert(url_column.Cells(i).Value)
+    .Left = image_column.Cells(i).Left
+    .Top = image_column.Cells(i).Top
+    image_column.Cells(i).EntireRow.RowHeight = .Height
+  End With
+
+Next
+
+***
+
+http://excel.tips.net/T002954_Sorting_with_Graphics.html
+* move and size with cells 
+
+***
+
+http://www.extendoffice.com/documents/excel/1061-excel-resize-all-pictures-charts.html
+* select all images and then resize (or resize with grid) 
+
+*** 
+
+path 
+
+file:///C:/Dropbox/projects-python/automated-testing/images/images/koala.jpg
+
+***
+
+http://www.extendoffice.com/documents/excel/1066-excel-select-all-pictures-charts.html
+* F5, Go to Special
+* Resize by height 

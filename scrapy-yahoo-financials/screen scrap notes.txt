@@ -1,0 +1,36 @@
+Screen Scaping 
+
+Action items
+
+# run tutorial 
+- create report of furnitures 
+
+***
+
+- scrapy -- on craigslist 
+
+***
+
+Scrapy
+
+http://doc.scrapy.org/en/latest/intro/tutorial.html
+* basics 
+
+http://mherman.org/blog/2012/11/05/scraping-web-pages-with-scrapy/#.U6ICLvldXRs
+http://mherman.org/blog/2012/11/08/recursively-scraping-web-pages-with-scrapy/#.U6ICLvldXRs
+* using recursive - craigslist as example 
+
+*** 
+
+Install Scrapy 
+
+http://doc.scrapy.org/en/latest/intro/install.html#intro-install
+
+sudo apt-get install libxml2-dev
+sudo apt-get install libxslt1-dev 
+
+easy_install Scrapy
+
+***
+
+http://newyork.craigslist.org/fua/#list

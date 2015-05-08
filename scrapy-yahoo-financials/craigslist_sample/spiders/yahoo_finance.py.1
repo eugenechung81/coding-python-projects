@@ -1,0 +1,64 @@
+from scrapy.item import BaseItem
+
+__author__ = 'eugene'
+
+from scrapy.spider import BaseSpider
+from scrapy.selector import HtmlXPathSelector
+from craigslist_sample.items import CraigslistSampleItem
+
+from scrapy.contrib.loader import ItemLoader
+
+
+class FlexibleItem(dict, BaseItem):
+    pass
+
+
+class YahooFinance(BaseSpider):
+    name = "yahoo"
+    allowed_domains = ["finance.yahoo.com"]
+    # start_urls = ["http://sfbay.craigslist.org/npo/"]
+    # create_list
+    start_urls = ["https://finance.yahoo.com/q/ae?s=JCP"]
+
+    def parse(self, response):
+        hxs = HtmlXPathSelector(response)
+
+        symbol = 'JCP'
+        tables = hxs.select("//table[@id='yfncsumtab']//table//table")
+        for tbl in tables:
+            rows = tbl.xpath('.//tr')
+            section = rows[0].select('.//th[1]//text()').extract()
+            headers = rows[0].select('.//th')
+
+            #for r in rows[1:]:
+            for i in xrange(1,len(rows)):
+                r = rows[i]
+                r_datas = r.select('.//td//text()').extract()
+                #for r_d in r_datas[1:]:
+                for j in xrange(1,len(r_datas)):
+                    r_d = r_datas[j]
+                    header = ' '.join(headers[j].select('.//text()').extract())
+
+                    item = FlexibleItem()
+                    loader = ItemLoader(item)
+                    loader.add_value('symbol', symbol)
+                    loader.add_value('section', section)
+                    loader.add_value('header', header)
+                    loader.add_value(r_datas[0],r_d)
+                    print loader.load_item()
+
+            # rows =
+            # headers = t.select()
+            # loader.add_value('section', section)
+            # loader.add_value('test','1')
+
+
+            #datas = hxs.select("//td[@class='yfnc_tabledata1']/text()").extract()
+            #print datas
+            # items = []
+            # for titles in titles:
+            #     item = CraigslistSampleItem()
+            #     item ["title"] = titles.select("a/text()").extract()
+            #     item ["link"] = titles.select("a/@href").extract()
+            #     items.append(item)
+            # return items

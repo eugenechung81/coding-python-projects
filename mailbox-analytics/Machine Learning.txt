@@ -1,0 +1,12 @@
+Machine Learning
+ 
+http://en.wikipedia.org/wiki/Weka_(machine_learning)
+* start with quasi-linear model, such as logistic regression or linear discriminant analysis
+ 
+
+Tools/Frameworks
+* http://java-ml.sourceforge.net/
+* http://en.wikipedia.org/wiki/Weka_(machine_learning)
+
+Blogs
+* http://quantumfinancier.wordpress.com/

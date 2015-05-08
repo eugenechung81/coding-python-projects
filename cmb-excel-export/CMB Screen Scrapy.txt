@@ -1,0 +1,48 @@
+
+CMB profiles - need to create email accounts -- real names? (create 2x) -> then 5x - 10x
+
+Taylor
+Gray
+
+Joon
+
+http://www.behindthename.com/random/random.php?number=2&gender=m&surname=&all=no&usage_eng=1&usage_kor=1
+
+***
+
+need to install excel 
+
+***
+
+
+
+Python light DB
+
+* sqlite3
+* pytables
+
+***
+
+csv 
+
+http://stackoverflow.com/questions/3710263/how-do-i-create-a-csv-file-from-database-in-python
+* write row 
+
+http://www.dreamincode.net/forums/topic/196479-editing-a-csv-file/
+* editing csv in line 
+
+***
+
+http://stackoverflow.com/questions/3042757/downloading-a-picture-via-urllib-and-python
+* download image with urllib 
+
+***
+
+https://coffeemeetsbagel.com/bagels/matched/
+
+
+'Name': 'Private until connected', 'Age': '26 (Scorpio)', 'Current City': 'Manhattan, NY', 'Description': 'I am fiercely devoted to friends and family, a social introvert, always looking for new places to checkout in the city\nI look friendly and approachable, the same as my pictures, the same as my baby pictures\nI like discovering hidden spots and trying new places, traveling , reading and going to watch musicals/movies/etc\nI appreciate when my date takes the initiative, is an all-around gentleman , reads', 'Employer': 'N/A', 'Religion': 'Christian', 'Height': '5\'4"', 'Home Country': 'United States', 'Nationality': 'Korean', 'Education': ['NYU/Bachelors', 'Winston Churchill High/High school'], 'Ethnicity': 'Asian', 'Occupation': 'Broadcast News Producer'}
+
+//*[@id="content-wrapper"]/div[1]/div/a/div/img
+
+***

@@ -1,0 +1,330 @@
+import sys
+import glob
+import json
+
+sys.path.append('gen-py')
+sys.path.insert(0, glob.glob('/opt/thrift-0.9.1/lib/py/build/lib.*')[0])
+
+from pprint import pprint
+from tutorial import Calculator
+from tutorial.ttypes import *
+from thrift.transport import TSocket
+from thrift.transport import TTransport
+from thrift.protocol import TBinaryProtocol
+from prettytable import PrettyTable
+
+transport = TSocket.TSocket('192.168.56.1', 9090)
+transport = TTransport.TBufferedTransport(transport)
+protocol = TBinaryProtocol.TBinaryProtocol(transport)
+client = Calculator.Client(protocol)
+transport.open()
+
+
+def json_print(row):
+    print json.dumps(row.__dict__, sort_keys=True, indent=4)
+
+
+
+def get_single_vars_map(row):
+    single_vars = {}
+    for group in row.groups.values():
+        if(len(group.values()) == 1):
+            for vars in group.values():
+                single_vars.update(vars)
+    return single_vars
+
+def get_repeat_vars_map(row):
+    repeat_vars = {}
+    # for group in row.groups.values():
+    for key, group in row.groups.iteritems():
+        if(len(group.values()) > 1):
+            repeat_vars[key] = group
+    return repeat_vars
+
+def get_unique_headers(rpt_vars, grp_name):
+    rpt = rpt_vars.get(grp_name)
+    unique_headers = set()
+    for vars in rpt.values():
+        unique_headers.update(set(vars.keys()))
+    return list(unique_headers)
+
+# get data
+
+rows = client.getRows('SCREENS')
+print rows
+
+row = client.getRow('CANDIDATE','e5af7810-23f1-11e4-a305-002590c0b6c6')
+rows = client.getRows('CANDIDATE')
+
+###
+# SCREENS
+rows = client.getRows('SCREENS')
+row = rows[0]
+pprint(row.__dict__)
+# json_print(row)
+# print rows
+
+sgl_vars = get_single_vars_map(row)
+pprint(sgl_vars)
+
+
+rpt_vars = get_repeat_vars_map(row)
+pprint(rpt_vars)
+
+print_rpt_grp(row,'AFFILIATE')
+
+maps_of_maps = rpt_vars.get('AFFILIATE')
+
+maps_of_maps = rpt_vars.get('LAYOUT')
+pprint(maps_of_maps)
+
+headers = get_unique_headers(rpt_vars,'LAYOUT')
+pprint(headers)
+
+print_maps_of_maps(maps_of_maps, headers)
+
+def print_rpt_grp(row, grp_name):
+    rpt_vars = get_repeat_vars_map(row)
+    maps_of_maps = rpt_vars.get(grp_name)
+    headers = get_unique_headers(rpt_vars,grp_name)
+    print_maps_of_maps(maps_of_maps, headers)
+
+def convert_key_to_int(headers_map):
+    new_map = {}
+    for k,v in headers_map.iteritems():
+        new_map[int(k)] = v
+    return new_map
+
+def print_maps_of_maps(maps_of_maps, headers):
+    headers_map = {}
+    new_headers = []
+    for i in xrange(len(headers)):
+        new_headers.append(str(i))
+        headers_map[str(i)] = headers[i]
+    new_headers.insert(0, 'key')
+    pprint(convert_key_to_int(headers_map))
+
+    x = PrettyTable(new_headers)
+    for h in new_headers:
+        x.align[h] = 'l'
+    x.padding_width = 1
+    for k,v in maps_of_maps.iteritems():
+        row_list = []
+        for h_num in new_headers:
+            h = ''
+            if(h_num == 'key'):
+                h = h_num
+            else:
+                h = headers_map[h_num]
+            # print h
+            if(h == 'key'):
+                row_list.append(k)
+            elif(h in v):
+                row_list.append(v[h])
+            else:
+                row_list.append('')
+        x.add_row(row_list)
+    # x.sortby = new_headers[4]
+    x.sortby = new_headers[0]
+    print x
+
+def old_print_maps_of_maps(maps_of_maps, headers):
+    new_headers = []
+    new_headers.insert(0, 'key')
+    for i in xrange(len(headers)):
+        new_headers.append(i)
+    headers.insert(0,'key')
+    x = PrettyTable(headers)
+    for h in headers:
+        x.align[h] = 'l'
+    x.padding_width = 1
+    for k,v in maps_of_maps.iteritems():
+        row_list = []
+        for h in headers:
+            if(h == 'key'):
+                row_list.append(k)
+            elif(h in v):
+                row_list.append(v[h])
+            else:
+                row_list.append('')
+        # print row_list
+        x.add_row(row_list)
+    x.sortby = headers[0]
+    print x
+
+
+
+
+###
+
+
+# wrap a object
+# http://stackoverflow.com/questions/972/adding-a-method-to-an-existing-object
+class WrapperRow(object):
+    def print_test(self):
+        print 'test'
+
+class WrapperTest(object):
+    def __init__(self):
+        pass
+    def print_test(self):
+        print 'test'
+
+class Test():
+    pass
+
+def extend(obj):
+    def func1(text):
+        print text
+    return func1
+
+test = Test()
+test.print_something = extend(test)
+test.print_something('test')
+
+w_t = WrapperTest(test)
+
+row = client.getRow()
+print row.rowKey
+print row
+
+
+# pretty printing
+print pprint(row.groups)
+
+
+print json.dumps(row.__dict__, sort_keys=True, indent=4, separators=(',', ': '))
+print json.dumps(row.__dict__, sort_keys=True, indent=4)
+
+def json_print(row):
+    print json.dumps(row.__dict__, sort_keys=True, indent=4)
+
+json_print(row)
+###
+
+wrapper_row = WrapperRow(row)
+wrapper_row.print_test()
+
+# pretty print
+single_vars = {}
+repeat_vars = []
+for group in row.groups.values():
+    if(len(group.values()) == 1):
+        for vars in group.values():
+            #print vars
+            single_vars.update(vars)
+    elif(len(group.values()) > 1):
+        print group.values()
+        repeat_vars.append(group.values())
+
+
+group_list = group.values()
+
+
+
+headers = ['CANDIDATE.ACTIONS.INBOX.DBID','CANDIDATE.ATTACHMENTS.ATTACHMENT.DOCUMENT','CANDIDATE.ATTACHMENTS.ATTACHMENT.TEMPLATE']
+#headers = ['CANDIDATE.ATTACHMENTS.ATTACHMENT.DOCUMENT','CANDIDATE.ATTACHMENTS.ATTACHMENT.TEMPLATE']
+x = PrettyTable(headers)
+#x.align["City name"] = "l" # Left align city names
+for h in headers:
+    x.align[h] = 'l'
+x.padding_width = 1 # One space between column edges and contents (default)
+x.add_row(["Adelaide",1295, 1158259, 600.5])
+
+def print_grp(group_list):
+    x = PrettyTable(headers)
+    for h in headers:
+        x.align[h] = 'l'
+    x.padding_width = 1 # One space between column edges and contents (default)
+    for g in group_list:
+        row_list = []
+        for h in headers:
+            if(h in g):
+                row_list.append(g[h])
+            else:
+                row_list.append('')
+        # print row_list
+        x.add_row(row_list)
+    x.sortby = headers[0]
+    print x
+
+
+for r in repeat_vars:
+    print_grp(r)
+
+from pprint import pprint
+pprint(single_vars)
+
+rows = client.getRows('test')
+print rows
+for r in rows:
+    print r
+
+row = rows[16]
+print row
+
+# row.info
+# row.delete
+
+
+def get_row_map(row):
+    single_vars = {}
+    repeat_vars = []
+    for group in row.groups.values():
+        if(len(group.values()) == 1):
+            for vars in group.values():
+                #print vars
+                single_vars.update(vars)
+        elif(len(group.values()) > 1):
+            # print group.values()
+            repeat_vars.append(group.values())
+    return single_vars
+
+table = []
+headers = ['CANDIDATE.LEGEND.ABAQUS.PROPER', 'CANDIDATE.AUTHORIZATION.LOGIN.USERNAME','CANDIDATE.PHASING.PHASE.STATUS']
+for r in rows:
+    row_map = get_row_map(r)
+    table.append(row_map)
+print table
+print_grp(table)
+
+
+#
+
+single_vars = {}
+repeat_vars = {}
+
+
+# OLD
+
+client.ping()
+print 'ping()'
+
+sum = client.add(1, 1)
+print '1+1=%d' % (sum)
+
+work = Work()
+
+work.op = Operation.DIVIDE
+work.num1 = 1
+work.num2 = 0
+
+try:
+    quotient = client.calculate(1, work)
+    print 'Whoa? You know how to divide by zero?'
+except InvalidOperation, io:
+    print 'InvalidOperation: %r' % io
+
+work.op = Operation.SUBTRACT
+work.num1 = 15
+work.num2 = 10
+
+diff = client.calculate(1, work)
+print '15-10=%d' % (diff)
+
+log = client.getStruct(1)
+print 'Check log: %s' % (log.value)
+
+
+transport.close()
+

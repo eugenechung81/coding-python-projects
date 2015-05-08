@@ -1,0 +1,54 @@
+Yahoo Screen Scrap 
+
+//table[@id='yfncsumtab']/tbody[@id='yui_3_9_1_8_1403536872142_48']/tr[@id='yui_3_9_1_8_1403536872142_47']/td[@id='yui_3_9_1_8_1403536872142_46']/table[@id='yui_3_9_1_8_1403536872142_45']/tbody[@id='yui_3_9_1_8_1403536872142_44']/tr[@id='yui_3_9_1_8_1403536872142_43']/td[@id='yui_3_9_1_8_1403536872142_42']/table[@id='yui_3_9_1_8_1403536872142_41']/tbody[@id='yui_3_9_1_8_1403536872142_52']/tr[@id='yui_3_9_1_8_1403536872142_51']/th[@id='yui_3_9_1_8_1403536872142_50']
+
+
+*** 
+
+Symbol
+Section
+Column Identifier
+
+
+*** 
+
+http://stackoverflow.com/questions/5069416/scrapy-scraping-data-without-having-to-explicitly-define-each-field-to-be-scra
+* create dynamic fields using Flexible ItemLaoder
+* or use Dict override 
+
+http://stackoverflow.com/questions/13437402/how-to-run-scrapy-from-within-a-python-script
+* running scrapy standalone in python 
+
+***
+
+http://doc.scrapy.org/en/latest/topics/selectors.html
+* make sure to use "." when running through the selectors (items list) 
+
+***
+
+https://finance.yahoo.com/q/ae?s=
+
+***
+
+
+https://finance.yahoo.com/q/ae?s=JCP
+* extract out data 
+
+https://code.google.com/p/yahoo-finance-managed/wiki/YahooFinanceAPIss
+* yahoo API
+
+
+http://www.insidermonkey.com/insider-trading/company/j+c+penney+co+inc/1166126/hedge-funds/#/ffp=2014-03-31&fot=7&fso=1
+* insider information - add in notional + percentage change table 
+
+***
+
+//td[@class='yfnc_tabledata1']
+
+***
+
+			earnig est - Avg Estimate		No of Analysis
+JCP   		current qtr     0.94
+			next qtr        0.84
+			current atr
+			next year

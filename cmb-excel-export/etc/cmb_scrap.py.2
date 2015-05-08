@@ -1,0 +1,122 @@
+from time import sleep
+import urllib
+import csv
+import os
+from selenium import webdriver
+
+driver = webdriver.Firefox()
+
+def go(path):
+    return driver.get(path)
+
+def find(path):
+    return driver.find_element_by_xpath(path)
+
+def finds(path):
+    return driver.find_elements_by_xpath(path)
+
+def get_all_links():
+    go("https://coffeemeetsbagel.com/bagels/history/")
+    links = []
+    profiles = finds('//*[@id="content-wrapper"]/div/div/a')
+    for p in profiles:
+        links.append(p.get_attribute('href'))
+    return links
+
+def download_profiles_pics(link):
+    id = link[44:]
+    go(link)
+    image = find('//*[@id="main-photo"]').get_attribute('src')
+    urllib.urlretrieve(image, 'images/' + id + '-1.jpg')
+    num_of_images = len(driver.find_elements_by_xpath('//*[@id="arrow"]/div/div'))
+    for n in xrange(2,num_of_images+1):
+        find('//*[@id="next"]').click()
+        image = find('//*[@id="main-photo"]').get_attribute('src')
+        urllib.urlretrieve(image, 'images/' + id + '-' + str(n) + '.jpg')
+
+def get_csv_row(link, headers):
+    go(link)
+    details = finds('//*[@id="main"]/div[2]/div[2]/p')
+    bagel_row = {}
+    for d in details:
+        line = str(d.text)
+        # print line.replace('\n',': ')
+        if line.startswith('Education'):
+            bagel_row['Education'] = line.split('\n')[1:]
+        elif line.startswith('I am'):
+            bagel_row['Description'] = line
+        else:
+            key,value = str(d.text).split('\n')
+            bagel_row[key]=value
+
+    id = link[44:]
+    bagel_row['Id'] = id
+    bagel_row['Url'] = link
+    bagel_row['Image-1'] = 'images/' + id + '-1.jpg'
+    num_of_images = len(driver.find_elements_by_xpath('//*[@id="arrow"]/div/div'))
+    for n in xrange(2,num_of_images+1):
+        find('//*[@id="next"]').click()
+        bagel_row['Image-' + str(n)] = 'images/' + id + '-' + str(n) + '.jpg'
+
+    row = [bagel_row[h] if h in bagel_row.keys() else '' for h in headers]
+
+    return row
+
+# Start
+# headers = ['Id', 'Name', 'Age', 'Height', 'Current City', 'Description', 'Employer', 'Religion', 'Home Country', 'Nationality', 'Education', 'Ethnicity', 'Occupation']
+headers = ['Id', 'Name', 'Age', 'Height', 'Occupation', 'Url', 'Image-1', 'Image-2', 'Image-3', 'Image-4']
+links = get_all_links()
+
+# https://coffeemeetsbagel.com/bagels/matched/6049617
+# https://coffeemeetsbagel.com/bagels/matched/6092846
+# download_profiles_pics(link)
+# row = get_csv_row(link, headers)
+
+rows = []
+for link in links[:10]:
+    download_profiles_pics(link)
+    row = get_csv_row(link, headers)
+    rows.append(row)
+    sleep(3)
+
+
+f = open("bagels.csv", 'w')
+writer = csv.writer(f)
+writer.writerow(headers)
+for r in rows:
+    writer.writerow(r)
+f.close()
+
+# bagel_row.keys()
+
+# TODO use dynamic object
+
+class Bagel(object):
+    pass
+
+
+b = Bagel()
+b.id = '111'
+b.name = 'test'
+setattr(b, 'test2','test2')
+
+# get profile details
+driver.find_element_by_xpath(".//*[@id='content-wrapper']/div[1]/div/a").click()
+driver.back()
+driver.forward()
+# driver.find_element_by_xpath('//[@id="content-wrapper"]/div[1]/div/')
+
+
+
+# CSV
+
+f = open("out2.csv", 'w')
+writer = csv.writer(f)
+writer.writerow(['name', 'address', 'phone', 'etc'])
+writer.writerow(['bob', '2 main st', '703', 'yada'])
+writer.writerow(['mary', '3 main st', '704', 'yada'])
+f.close()
+
+
+
+#driver.execute_script("return arguments[0].innerHTML;", p2)
